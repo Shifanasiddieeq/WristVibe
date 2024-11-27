@@ -1,0 +1,160 @@
+/* General Reset */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: 'Arial', sans-serif;
+}
+
+/* Body and Container Styling */
+body {
+  display: flex;
+  min-height: 100vh;
+  margin: 0;
+  background-color: #f5f5f5;
+  color: #372957;
+}
+
+.container {
+  display: flex;
+  width: 100%;
+}
+
+/* Sidebar Styling */
+.sidebar {
+  width: 250px;
+  background-color: #39516c;
+  color: white;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  padding: 20px;
+  box-shadow: 2px 0 5px rgba(67, 17, 185, 0.1);
+}
+
+.sidebar .logo {
+  font-size: 24px;
+  font-weight: bold;
+  text-align: center;
+  margin-bottom: 30px;
+}
+
+.sidebar .menu {
+  list-style: none;
+}
+
+.sidebar .menu li {
+  margin: 15px 0;
+}
+
+.sidebar .menu a {
+  text-decoration: none;
+  color: white;
+  font-size: 16px;
+  display: block;
+  padding: 10px 15px;
+  border-radius: 5px;
+  transition: background-color 0.3s ease;
+}
+
+.sidebar .menu a:hover {
+  background-color: #b8d5f4;
+}
+
+/* Main Content Styling */
+.main-content {
+  flex: 1;
+  background-color: #ffffff;
+  display: flex;
+  flex-direction: column;
+  border-radius: 10px 0 0 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* Topbar Styling */
+.topbar {
+  background-color: #f8f9fa;
+  padding: 15px 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 2px solid #ddd;
+}
+
+.search-bar {
+  width: 300px;
+  padding: 8px;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+}
+
+.user-options {
+  display: flex;
+  align-items: center;
+}
+
+.user-options span {
+  margin-right: 15px;
+  font-size: 16px;
+  color: #555;
+}
+
+.logout-btn {
+  background-color: #ab2633;
+  color: white;
+  border: none;
+  padding: 8px 15px;
+  border-radius: 5px;
+  font-size: 14px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.logout-btn:hover {
+  background-color: #802f37;
+}
+
+/* Dashboard Section */
+.dashboard {
+  flex: 1;
+  padding: 30px;
+}
+
+.dashboard h1 {
+  font-size: 24px;
+  color: #333;
+  margin-bottom: 20px;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .sidebar {
+    width: 200px;
+    padding: 15px;
+  }
+
+  .sidebar .logo {
+    font-size: 20px;
+  }
+
+  .sidebar .menu a {
+    font-size: 14px;
+    padding: 8px;
+  }
+
+  .search-bar {
+    width: 200px;
+  }
+
+  .user-options span {
+    font-size: 14px;
+  }
+
+  .logout-btn {
+    font-size: 12px;
+    padding: 6px 10px;
+  }
+}

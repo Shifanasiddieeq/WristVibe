@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit Product</title>
+    <link rel="stylesheet" href="/styles.css"> 
+    <link rel="stylesheet" href="/style/admin/editproduct.css"> 
+    <script src="/scripts.js" defer></script> 
+    <!-- <style>
+        .images{
+            display: flex;
+        }
+        .image-controller{
+            margin-right: 30px;
+        }
+    </style> -->
+</head>
+<body>
+    <main>
+        <div class="page-content">
+            <h1 class="content-head">
+                <a href="/admin/products">
+                    <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#666666">
+                        <path d="m313-440 224 224-57 56-320-320 320-320 57 56-224 224h487v80H313Z" />
+                    </svg>
+                </a>
+                Edit Product
+            </h1>
+
+            <div class="form-container">
+              
+                <form id="editProductForm" action="/admin/editproduct/<%= product._id %>" method="POST" enctype="multipart/form-data">
+                    <div class="image-upload-container images">
+                        <% for (let i = 0; i < 3; i++) { %>
+                        <div class="form-group image-controller">
+                            <img id="productImage<%= i + 1 %>" 
+                                src="<%= product.images[i] || 'https://via.placeholder.com/100' %>" 
+                                alt="Product Image <%= i + 1 %>" width="100">   
+                            <input type="file" name="images" id="imageUpload<%= i + 1 %>" 
+                                style="display: none;" 
+                                accept="image/*">
+                            <div class="upload-photo" onclick="document.getElementById('imageUpload<%= i + 1 %>').click();">
+                                Upload Photo <%= i + 1 %>
+                            </div>
+                            
+                        </div>
+                        <% } %>
+                    </div>
+
+                    <span id="imageError" style="color: red;"></span>
+                    <br><br>
+
+                    
+                    <div class="input-field-container">
+                        <div class="form-group">
+                            <input type="text" placeholder="Product Name" name="productName" id="productName"
+                                value="<%= product.productName %>" required> 
+                            <input type="text" placeholder="Brand" name="brand" id="brand"
+                                value="<%= product.brand %>" required>
+                        </div><br>
+                        <div class="form-group">
+                            <input type="number" placeholder="Price" name="price" id="price"
+                                value="<%= product.price %>" required>
+                            <input type="text" placeholder="Color" name="color" id="color"
+                                value="<%= product.color %>" required>
+                        </div><br>
+                        <div class="form-group">
+                            <input type="number" placeholder="Stock Count" name="stockCount" id="stockCount"
+                                value="<%= product.stockCount %>" required>
+                            <select id="category" name="category" required>
+                                <option value="">Select Category</option>
+                                <option value="Mens collection" <%= product.category === 'Mens collection' ? 'selected' : '' %>>Mens Collection</option>
+                                <option value="Womens collection" <%= product.category === 'Womens collection' ? 'selected' : '' %>>Womens Collection</option>
+                                <option value="Smart collection" <%= product.category === 'Smart collection' ? 'selected' : '' %>>Smart Watch</option>
+                            </select>
+                        </div><br>
+                        <div class="form-group">
+                            <textarea name="description" placeholder="Description" id="description" required><%= product.description %></textarea>
+                        </div>
+                    </div> <br>
+
+                    <button class="add-btn" id="submit-btn">Save Changes</button>
+                </form>
+            </div>
+        </div>
+    </main>
+</body>
+</html>
