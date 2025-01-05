@@ -1,80 +1,163 @@
 const Product = require('../../model/productModel')
-const categorySchema=require('../../model/categoryModel')
-// const loadShop = async (req,res) =>{
-
-//     try {
-//             const products = await Product.find({ isListed: true }); 
-//             res.render('user/shop', { products }); 
-//         } catch (error) {
-//             console.error(error);
-//             res.status(500).send('Server Error');
-//         }
-        
-//     }
-
-const loadShop=async(req,res)=>{
-   
-        const page = parseInt(req.query.page) || 1;
-        const limit = 10; // Number of products per page
-        const skip = (page - 1) * limit;
-        const categories= await categorySchema.find({isListed:true})
-    
-        try {
-            // Fetch products with pagination
-            const products = await Product.find({isListed:true})
-                .skip(skip)
-                .limit(limit);
-    
-            // Get total count for pagination calculation
-            const totalProducts = await Product.countDocuments();
-    
-            // Calculate total pages
-            const totalPages = Math.ceil(totalProducts / limit);
-    
-            res.render('user/shop', {
-                categories,
-                products,
-                totalPages,
-                currentPage: page
-            });
-        } catch (error) {
-            console.error(error);
-            res.status(500).send('Server Error');
-        }
-   
-    
-}
+const Offer = require('../../model/offerModel')
+const categorySchema = require('../../model/categoryModel');
+const { findBestOffer } = require('../../Service/bestOffer')
 
 
+const loadShop = async (req, res) => {
+    const { category, sort, search } = req.query;
 
-const productDetails = async(req,res)=>{
+    const categorySelected = category || '';
+    const sortBy = sort || '';
+    const searchQuery = search || '';
+
+    const filterConditions = {};
+
+    if (categorySelected && categorySelected !== 'all') {
+        filterConditions.category = categorySelected;
+    }
+
+    if (searchQuery) {
+        filterConditions.productName = { $regex: searchQuery, $options: 'i' }; 
+    }
+
+    let sortConditions = {};
+    switch (sortBy) {
+        case 'price_asc':
+            sortConditions = { price: 1 };
+            break;
+        case 'price_desc':
+            sortConditions = { price: -1 };
+            break;
+        case 'a_z':
+            sortConditions = { productName: 1 };
+            break;
+        case 'z_a':
+            sortConditions = { productName: -1 };
+            break;
+        default:
+            sortConditions = {};  
+            break;
+    }
 
     try {
-        // const product = await Product.findById(req.params.id);
-        // if (!product) return res.status(404).send('Product not found');
-        const product = await Product.findOne({ 
-            _id: req.params.id, 
-            isListed: true 
+       
+       
+        const categories = await categorySchema.find({ isListed: true });
+
+        const productss = await Product.find({ isListed: true, ...filterConditions })
+            .sort(sortConditions)
+            .populate('category')
+
+        const products = productss.filter(item => item.category.isListed === true )
+
+        const offers = await Offer.find({ isActive: true })
+            .populate('selectedProducts')
+            .populate('selectedCategory');
+
+       
+        const productsWithOffers = products.map((product) => {
+            const findBestOffer = (product, offers) => {
+                const productOffers = offers.filter(offer =>
+                    offer.selectedProducts.some(p => p.equals(product._id)) || 
+                    offer.selectedCategory.some(c => c.equals(product.category._id))
+                );
+    
+                if (productOffers.length > 0) {
+                    return productOffers.reduce((best, offer) =>
+                        offer.discountAmount > best.discountAmount ? offer : best,
+                        productOffers[0]
+                    );       
+                }
+                return null;
+            };
+            const bestOffer = findBestOffer(product, offers);
+    
+
+          
+            return {
+                ...product.toObject(),
+                bestOffer,
+            };
         });
+
+        res.render('user/shop', {
+            categories,
+            products: productsWithOffers,
+            categorySelected,
+            sortBy,
+            searchQuery,
+        });
+    } catch (error) {
+        console.error('Error loading shop:', error);
+        res.status(500).send('Server Error');
+    }
+};
+
+
+
+const productDetails = async (req, res) => {
+    try {
+        
+        const product = await Product.findOne({
+            _id: req.params.id,
+            isListed: true,
+        }).populate('category'); 
 
         if (!product) {
             return res.status(404).send('Product not found or unlisted');
         }
 
+        
         const relatedProduct = await Product.find({
-            isListed:true,
-            category:product.category,
-            _id:{$ne:req.params.id},
-            
-        })
-        res.render('user/productDetails', { product,relatedProduct });
-      } catch (err) {
-        res.status(500).send('Server Error');
-      }
+            isListed: true,
+            category: product.category,
+            _id: { $ne: req.params.id },
+        });
 
-}
+       
+        const offers = await Offer.find({ isActive: true })
+            .populate('selectedProducts')
+            .populate('selectedCategory');
+
+       
+        const findBestOffer = (product, offers) => {
+            const productOffers = offers.filter(offer =>
+                offer.selectedProducts.some(p => p.equals(product._id)) || 
+                offer.selectedCategory.some(c => c.equals(product.category._id))
+            );
+
+            if (productOffers.length > 0) {
+                return productOffers.reduce((best, offer) =>
+                    offer.discountAmount > best.discountAmount ? offer : best,
+                    productOffers[0]
+                );
+            }
+            return null;
+        };
+        const bestOffer = findBestOffer(product, offers);
+
+       
+        const priceWithOffer = bestOffer
+            ? Math.max(0, product.price - bestOffer.discountAmount) 
+            : product.price;
+
+        res.render('user/productDetails', {
+            product: {
+                ...product.toObject(),
+                bestOffer,
+                priceWithOffer,
+            },
+            relatedProduct,
+        });
+    } catch (err) {
+        console.error('Error loading product details:', err);
+        res.status(500).send('Server Error');
+    }
+};
+
 
 module.exports = {
-    loadShop,productDetails
+    loadShop, productDetails, findBestOffer
 }
 

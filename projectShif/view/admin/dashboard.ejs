@@ -1,15 +1,16 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Dashboard</title>
+  <title>Admin Dashboard</title>
   <link rel="stylesheet" href="/style/admin/dashboard.css">
-  
- 
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
 </head>
-<body>
 
+<body>
   <div class="container">
     <aside class="sidebar">
       <div class="logo">Wrist Vibe</div>
@@ -18,20 +19,339 @@
         <li><a href="/admin/products">Products</a></li>
         <li><a href="/admin/users">Users</a></li>
         <li><a href="/admin/categories">Category</a></li>
+        <li><a href="/admin/admin-order">Orders</a></li>
+        <li><a href="/admin/coupon">Coupon</a></li>
+        <li><a href="/admin/offer">Offer</a></li>
+        <li><a href="/admin/salesReport">Sales Report</a></li>
       </ul>
     </aside>
+
     <main class="main-content">
       <header class="topbar">
         <input type="text" placeholder="Search" class="search-bar">
         <div class="user-options">
           <span>Admin</span>
-          <button class="logout-btn">Logout</button>
+          <form action="/admin/logout" method="POST">
+            <button type="submit" class="logout-btn">Logout</button>
+          </form>
         </div>
       </header>
+
       <section class="dashboard">
         <h1>Dashboard</h1>
+
+        <!-- Filter Section -->
+        <div>
+          <label for="filter">Filter:</label>
+          <select id="filter">
+            <option value="monthly">Monthly</option>
+            <option value="weekly">Weekly</option>
+            <option value="yearly">Yearly</option>
+          </select>
+        </div>
+
+        <canvas id="salesRevenueChart"></canvas>
+
+
+
+        <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+        <script>
+          // const salesData = JSON.parse('<%- salesData %>')
+          // getChart(salesData)
+
+          
+          // let salesRevenueChart
+          // function getChart(chartData) {
+          //   const labels = Object.keys(chartData)
+          //   const data = Object.values(chartData)
+          //   console.log(salesData)
+         
+          //   const ctx = document.getElementById('salesRevenueChart').getContext('2d');
+          //  if(salesRevenueChart){
+          //   salesRevenueChart.destroy()
+          // }
+          // // console.log(salesRevenueChart,'jjjjjjjjjjjj');
+          
+           
+          //    salesRevenueChart = new Chart(ctx, {
+          //     type: 'bar',
+          //     data: {
+          //       labels: labels,
+          //       datasets: [{
+          //         label: 'Amount',
+          //         data: data,
+          //         backgroundColor: ['#4e73df', '#1cc88a'],
+          //         borderColor: ['#4e73df', '#1cc88a'],
+          //         borderWidth: 1,
+          //       }],
+          //     },
+          //     options: {
+          //       responsive: true,
+          //     },
+          //   });
+          // }
+
+
+
+
+          
+
+
+
+
+
+
+
+
+
+
+
+          // function fetchAndUpdateChart(period) {
+
+
+          //   axios.post('/admin/dashboard/filter', { period })
+          //     .then(response => {
+          //       const { salesData } = response.data;
+          //       salesRevenueChart.data.datasets[0].data = [
+          //         salesData.totalSales || 0,
+          //         salesData.totalRevenue || 0,
+          //       ];
+          //       salesRevenueChart.update();
+          //     })
+          //     .catch(error => {
+          //       console.error("Error fetching sales data:", error);
+          //     });
+          // }
+
+          
+
+          // fetchAndUpdateChart('monthly');
+        </script>
+
+
+        <h2>Top Selling Products</h2>
+        <table>
+          <thead>
+            <tr>
+              <th>Product Name</th>
+              <th>Quantity Sold</th>
+            </tr>
+          </thead>
+          <tbody>
+
+            <% bestProducts.forEach(product=> { %>
+              <tr>
+                <td>
+                  <%= product.productName %>
+                </td>
+                <td>
+                  <%= product.quantity %>
+                </td>
+              </tr>
+              <% }) %>
+
+          </tbody>
+        </table>
+        <h2>Top Selling Categories</h2>
+        <table>
+          <thead>
+            <tr>
+              <th>Category Name</th>
+              <th>Quantity Sold</th>
+            </tr>
+          </thead>
+          <tbody>
+            <%console.log(bestSellingCategory) %>
+              <% bestSellingCategory.forEach(category=> { %>
+                <tr>
+                  <td>
+                    <%= category.categoryName %>
+                  </td>
+
+                  <td>
+                    <%= category.quantity %>
+                  </td>
+                </tr>
+                <% }) %>
+
+          </tbody>
+        </table>
+
+        <h2>Top Selling Brands</h2>
+        <table>
+          <thead>
+            <tr>
+
+              <th>Brand Name</th>
+              <th>Quantity Sold</th>
+            </tr>
+          </thead>
+          <tbody>
+            <%console.log(bestSellingBrand) %>
+              <% bestSellingBrand.forEach(brand=> { %>
+                <tr>
+                  <td>
+                    <%= brand.brandName %>
+                  </td>
+                  <td>
+                    <%= brand.quantity %>
+                  </td>
+                </tr>
+                <% }) %>
+          </tbody>
+        </table>
+
       </section>
     </main>
   </div>
+
+
+
+
+
+  <!-- <script>
+    const salesData = JSON.parse('<%- salesData %>')
+    getChart(salesData)
+
+
+
+
+
+
+
+    let salesRevenueChart; 
+
+    function getChart(chartData) {
+      const labels = Object.keys(chartData);
+      const data = Object.values(chartData);
+
+      const ctx = document.getElementById('salesRevenueChart').getContext('2d');
+
+      if (salesRevenueChart) {
+        salesRevenueChart.destroy();
+      }
+
+      salesRevenueChart = new Chart(ctx, {
+        type: 'bar',
+        data: {
+          labels: labels,
+          datasets: [{
+            label: 'Amount',
+            data: data,
+            backgroundColor: ['#4e73df', '#1cc88a'],
+            borderColor: ['#4e73df', '#1cc88a'],
+            borderWidth: 1,
+          }],
+        },
+        options: {
+          responsive: true,
+        },
+      });
+    }
+
+
+
+
+
+    document.getElementById('filter').addEventListener('change', (event) => {
+      const dates = event.target.value
+      axios.post('/admin/changeFilter', { dates })
+        .then((response) => {
+          if(response.data.changes){
+            getChart(response.data.changes)
+          }
+          console.log('Filter updated successfully:', response); 
+        })
+        .catch((error) => {
+          console.error('Error updating filter:', error); 
+        });
+    });
+
+
+
+
+
+
+
+  </script> -->
+
+
+
+
+
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+    
+      const salesData = JSON.parse('<%- salesData %>');
+      console.log('Initial sales data:', salesData); 
+  
+     
+      let salesRevenueChart; 
+      getChart(salesData);
+  
+    
+      function getChart(chartData) {
+        const labels = Object.keys(chartData);
+        const data = Object.values(chartData);
+  
+        const canvas = document.getElementById('salesRevenueChart');
+        if (!canvas) {
+          console.error('Canvas element not found'); 
+          return;
+        }
+  
+        const ctx = canvas.getContext('2d');
+  
+        if (salesRevenueChart) {
+          salesRevenueChart.destroy();
+        }
+  
+        salesRevenueChart = new Chart(ctx, {
+          type: 'bar',
+          data: {
+            labels: labels,
+            datasets: [{
+              label: 'Amount',
+              data: data,
+              backgroundColor: ['#4e73df', '#1cc88a'],
+              borderColor: ['#4e73df', '#1cc88a'],
+              borderWidth: 1,
+            }],
+          },
+          options: {
+            responsive: true,
+          },
+        });
+      }
+  
+      const filterDropdown = document.getElementById('filter');
+      if (!filterDropdown) {
+        console.error('Filter element not found'); 
+        return;
+      }
+  
+      filterDropdown.addEventListener('change', (event) => {
+        const dates = event.target.value;
+        console.log('Selected filter:', dates); 
+  
+        axios.post('/admin/changeFilter', { dates })
+          .then((response) => {
+            if (response.data.changes) {
+              console.log('Filtered data received:', response.data.changes); 
+              getChart(response.data.changes); 
+            } else {
+              console.warn('No changes received in response'); 
+            }
+          })
+          .catch((error) => {
+            console.error('Error updating filter:', error); 
+          });
+      });
+    });
+  </script>
+  
 </body>
+
 </html>

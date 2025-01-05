@@ -87,9 +87,9 @@
     transition: background-color 0.3s ease;
   }
   
-  button:hover {
+  /* button:hover {
     background-color: #2980b9;
-  }
+  } */
   
   #addButton {
     margin-bottom: 20px;
@@ -134,10 +134,27 @@
     background-color: #0fb253;
   }
   
-  table td button:hover {
+  /* table td button:hover {
     background-color: #27ae60;
+  } */
+    
+/*    
+  #list-btn{
+
+background-color: #ff4a4a;
+  } */
+
+  .list-unlist-btn {
+    padding: 10px 20px;
+    font-size: 16px;
+    color: white; /* Text color */
+    background-color: red; /* Red background */
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
   }
-  
+
   /* Responsive Design */
   @media (max-width: 768px) {
     .sidebar {

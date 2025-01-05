@@ -1,6 +1,7 @@
 const User = require('../../model/userModel')
 const nodemailer = require('nodemailer')
 const bcrypt = require('bcrypt')
+const walletSchema=require('../../model/walletModel')
 require('dotenv').config()
 
 
@@ -8,33 +9,6 @@ const loadLogin = async (req, res) => {
     res.render('user/login',{error:null})
        
 }
-
-// const loginpage = async(req,res)=>{
-
-// const { email, password } = req.body;
-
-// try {
-
-//     const user = await User.findOne({ email });
-//     console.log(user);
-
-//     if (user) {
-
-//         const isMatch = await bcrypt.compare(password, user.password);
-//         console.log(isMatch);
-
-//         if (isMatch) {
-//             req.session.user = user._id; // Store user in session
-//             return res.redirect('/home');
-//         }console.log('shifa');
-//     }
-
-//     res.render('user/login', { error: 'Invalid username or password' });
-// } catch (err) {
-//     console.error(err);
-//     res.render('login', { error: 'Something went wrong. Please try again.' });
-// }
-
 
 const loginpage = async (req, res) => {
     const { email, password } = req.body;
@@ -65,12 +39,14 @@ const loginpage = async (req, res) => {
 };
 
 const loadRegister = async (req, res) => {
+    req.session.refferalCode=req.query.refferalCode
     res.render('user/register')
 }
 
 const loadOtp = async (req, res) => {
     res.render('user/registerOTP')
 }
+
 
 
 const registerUser = async (req, res) => {
@@ -90,7 +66,7 @@ const registerUser = async (req, res) => {
         }
 
 
-        const generatedOtp = Math.floor(1000 + Math.random() * 9000).toString(); // 4-digit OTP
+        const generatedOtp = Math.floor(1000 + Math.random() * 9000).toString(); 
         console.log('generated otp:', generatedOtp);
 
 
@@ -120,11 +96,8 @@ const registerUser = async (req, res) => {
     }
 };
 
-
-
 const verifyOtp = async (req, res) => {
-    console.log("houi sdafhakjhfkjahfkajhfkjhdkfhakjfh");
-
+    
     const { otp } = req.body;
     console.log("Received OTP from user:", otp);
     console.log("Stored OTP in session:", req.session.otp);
@@ -135,15 +108,35 @@ const verifyOtp = async (req, res) => {
         try {
             const hashedPassword = await bcrypt.hash(password, 10);
             const newUser = new User({ name, phone, email, password: hashedPassword });
-            await newUser.save();
-console.log(newUser);
-
-      
+            await newUser.save();      
             req.session.otp = null;
             req.session.tempUserData = null;
             req.session.user = newUser._id 
-            // res.status(200).json({ message: 'User registered successfully!' });
-            // res.send("haiiiiiiiiiii")
+
+            if(req.session.refferalCode){
+                const user=req.session.refferalCode
+
+                const owner = await User.findById(user);
+                 
+                if(owner){
+                    const userId=owner._id
+                    await walletSchema.findOneAndUpdate(
+                        { userId },
+                        {
+                          $inc: { balance: 200 },
+                          $push: {
+                            transactions: {
+                              type: "credit",
+                              amount: 200,
+                              description: "Referral Bonus",
+                              date: new Date(),
+                            },
+                          },
+                        },
+                        { new: true, upsert: true }
+                      );
+                }
+            }
             res.redirect('/home')
         } catch (error) {
             console.error(error);
@@ -158,7 +151,7 @@ console.log(newUser);
 const resendOtp = async (req, res) => {
     try {
         const generatedOtp = Math.floor(1000 + Math.random() * 9000).toString();
-        console.log("nds,nskjdhf", generatedOtp);
+        console.log("resended", generatedOtp);
 
         req.session.otp = generatedOtp;
 
@@ -195,12 +188,12 @@ const logout = (req, res) => {
             console.error('Error destroying session:', err);
             return res.status(500).send('Something went wrong. Please try again.');
         }
-
-        
         res.clearCookie('connect.sid');
         res.redirect('/login'); 
     });
 };
+
+
 
 module.exports = {
     loadLogin, loadRegister, registerUser, loadOtp,

@@ -24,6 +24,10 @@ const userSchema = new mongoose.Schema({
     default: false,
 },
 
+referalCode:{
+  type:String
+}
+
 });
 
 

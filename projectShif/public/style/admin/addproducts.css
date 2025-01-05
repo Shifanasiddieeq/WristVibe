@@ -139,6 +139,10 @@ textarea {
 }
 
 /* Add button styling */
+#submit-btn{
+    background-color: #294354;
+}
+
 .add-btn {
     background-color: #4CAF50;
     color: white;

@@ -1,3 +1,10 @@
+// import Swal from 'sweetalert2';
+// import axios from 'axios';
+
+
+
+
+
 async function validateForm(event) {
     event.preventDefault(); 
 
@@ -86,7 +93,7 @@ async function validateForm(event) {
     if (!isValid) return;
 
     try {
-        console.log("hai houi hello");
+       
         
         const response = await axios.post('/register', {
             name,
@@ -108,4 +115,54 @@ async function validateForm(event) {
             alert("An unexpected error occurred.");
         }
     }
+
+
+
+
+    // try {
+    //     const response = await axios.post('/register', {
+    //         name,
+    //         phone,
+    //         email,
+    //         password,
+    //         confirm_password: confirmPassword,
+    //     });
+    
+    //     if (response.status === 200) {
+    //         // SweetAlert2 Success Message
+    //         Swal.fire({
+    //             icon: 'success',
+    //             title: 'Registration Successful',
+    //             text: 'Redirecting to OTP page...',
+    //             timer: 3000,
+    //             timerProgressBar: true,
+    //             showConfirmButton: false,
+    //         }).then(() => {
+    //             window.location.href = "/registerOTP"; // Redirect after alert
+    //         });
+    //     }
+    // } catch (error) {
+    //     if (error.response && error.response.status === 400) {
+    //         // SweetAlert2 Error Message
+    //         Swal.fire({
+    //             icon: 'error',
+    //             title: 'Registration Failed',
+    //             text: error.response.data, // Display server error message
+    //         });
+    //     } else {
+    //         console.error(error);
+    //         // SweetAlert2 Unexpected Error
+    //         Swal.fire({
+    //             icon: 'error',
+    //             title: 'Unexpected Error',
+    //             text: 'An unexpected error occurred. Please try again later.',
+    //         });
+    //     }
+    // }
+    
+
+
+
+
 }
+

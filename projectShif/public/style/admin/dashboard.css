@@ -158,3 +158,51 @@ body {
     padding: 6px 10px;
   }
 }
+
+/* public/style/admin/dashboard.css */
+.container {
+  display: flex;
+}
+
+.sidebar {
+  width: 200px;
+  background: #294354;;
+  color: white;
+}
+
+.main-content {
+  flex: 1;
+  padding: 20px;
+}
+
+.topbar {
+  display: flex;
+  justify-content: space-between;
+}
+
+.search-bar {
+  padding: 5px;
+}
+
+.logout-btn {
+  background-color: red;
+  color: white;
+  padding: 5px;
+  border: none;
+  cursor: pointer;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+th, td {
+  padding: 10px;
+  text-align: left;
+  border: 1px solid #ddd;
+}
+
+canvas {
+  max-width: 100%;
+}

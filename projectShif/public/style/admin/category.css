@@ -13,7 +13,7 @@ body {
 /* Sidebar */
 .sidebar {
     width: 240px;
-    background-color: #333;
+    background-color: #294354;
     color: #fff;
     height: 100%;
     position: fixed;
@@ -63,21 +63,35 @@ header {
     margin-bottom: 20px;
 }
 
-.add-btn {
-    background-color: #4caf50;
+/* .add-btn {
+    background-color: #294354;
     color: white;
     padding: 10px 15px;
     border: none;
     border-radius: 5px;
     cursor: pointer;
-}
+} */
 
-.add-btn:hover {
+
+  .add-btn {
+    background-color:  #294354;
+    color: white;
+    width: 150px;
+    height: 50px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px; /* Optional: Adjust font size */
+  }
+
+
+
+/* .add-btn:hover {
     background-color: #45a049;
-}
+} */
 
 .edit-btn {
-    background-color: #008cba; /* Light blue color */
+    background-color: #0fb253; /* Light blue color */
     color: white;
     padding: 8px 16px;
     border: none;
@@ -121,21 +135,36 @@ tr:hover {
     background-color: #f1f1f1;
 }
 
-.status-btn {
+/* .status-btn {
     padding: 5px 10px;
     border: none;
     border-radius: 3px;
     cursor: pointer;
     color: white;
-}
+} */
+
+.status-btn {
+    display: inline-block;
+    padding: 9px 15px; /* Add padding for a better look */
+    font-size: 14px; /* Adjust font size */
+    color: white; /* White text color for contrast */
+    background-color: red; /* Red background */
+    border: none; /* Remove default border */
+    border-radius: 5px; /* Add rounded corners */
+    cursor: pointer; /* Change cursor to pointer on hover */
+    transition: background-color 0.3s ease; /* Smooth transition effect */
+  }
 
 .status-btn.list {
     background-color: green;
-}
+} */
 
 .status-btn.unlist {
     background-color: red;
 }
+
+
+
 
 /* Modals */
 .modal {

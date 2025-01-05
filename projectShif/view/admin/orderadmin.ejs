@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Order Details</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+
+  <style>
+    .pagination {
+      margin: 20px 0;
+      text-align: center;
+    }
+
+    .pagination {
+      margin: 20px 0;
+      text-align: center;
+    }
+
+    .pagination a {
+      display: inline-block;
+      margin: 0 5px;
+      padding: 8px 12px;
+      border: 1px solid #ddd;
+      color: #333;
+      text-decoration: none;
+      border-radius: 4px;
+      font-size: 14px;
+    }
+
+    .pagination a.active {
+      background-color: #007bff;
+      color: white;
+      border-color: #007bff;
+    }
+
+    .pagination a:hover {
+      background-color: #0056b3;
+      color: white;
+    }
+
+
+    .sidebar {
+      height: 100vh;
+      background-color: #294354;
+      padding: 20px;
+      border-right: 1px solid #ddd;
+    }
+
+    .logos {
+      font-size: 1.5rem;
+      font-weight: bold;
+      margin-bottom: 20px;
+      color: #ddd;
+    }
+
+    /* #logos{
+      
+      font-size: 1.5rem;
+      font-weight: bold;
+      margin-bottom: 20px;
+    } */
+
+    .menu {
+      list-style: none;
+      padding: 0;
+    }
+
+    .menu li {
+      margin-bottom: 10px;
+    }
+
+    .menu a {
+      text-decoration: none;
+      color: #eef2f4;
+      display: block;
+      padding: 10px;
+      border-radius: 5px;
+    }
+
+    .menu a:hover {
+      background-color: #e9ecef;
+    }
+  </style>
+
+</head>
+
+<body>
+  <div class="container-fluid">
+    <div class="row">
+
+      <aside class="col-md-3 col-lg-2 sidebar">
+        <div class="logos">Wrist Vibe</div>
+        <ul class="menu">
+          <li><a href="/admin/dashboard">Dashboard</a></li>
+          <li><a href="/admin/products">Products</a></li>
+          <li><a href="/admin/users">Users</a></li>
+          <li><a href="/admin/categories">Category</a></li>
+          <li><a href="/admin/admin-order">Order</a></li>
+          <li><a href="/admin/coupon">Coupon</a></li>
+          <li><a href="/admin/offer">Offer</a></li>
+          <li><a href="/admin/salesReport">Sales Report</a></li>
+
+        </ul>
+      </aside>
+
+
+      <div class="col-md-9 col-lg-10 my-5">
+        <h1 id="details" class="mb-4">Order Details</h1>
+
+
+        <% if (orders && orders.length> 0) { %>
+          <table class="table table-striped">
+            <thead>
+              <tr>
+                <th scope="col">Order ID</th>
+                <th scope="col">Customer</th>
+                <th scope="col">Status</th>
+                <th scope="col">Total Price</th>
+                <th scope="col">Payment Method</th>
+                <th scope="col">Date</th>
+                <th scope="col">Action</th>
+              </tr>
+            </thead>
+            <tbody>
+              <% orders.forEach(order=> { %>
+                <tr>
+                  <td>
+                    <%= order._id %>
+                  </td>
+                  <td>
+                    <%= order.customer.userName %>
+                  </td>
+                  <td id="status-<%= order._id %>">
+                    <%= order.status %>
+                      <% if(order.request.requested){ %>
+                        <button id="noti-btn-<%= order._id %>" class="noti-btn"
+                          onclick="notificationBtn('<%= order._id %>','<%= order.request.reason %>')"></button>
+                        <% } %>
+                  </td>
+                  <td>Rs.<%= order.totalPrice.toFixed(2) %>
+                  </td>
+                  <td>
+                    <%= order.paymentMethod %>
+                  </td>
+                  <td>
+                    <%= new Date(order.orderDate).toLocaleDateString() %>
+                  </td>
+                  <td>
+                    <form>
+                      <select data-id="<%= order._id %>" class="form-select" name="status"
+                        onchange="updateStatus('<%= order._id %>', this.value)" <% if (order.status==='Cancelled' ||
+                        order.status==='Delivered' || order.status==='Returned' ) { %> disabled <% } %> >
+                          <option value="Pending" <%=order.status==='Pending' ? 'selected' : '' %>>Pending</option>
+                          <option value="Shipped" <%=order.status==='Shipped' ? 'selected' : '' %>>Shipped</option>
+                          <option value="Delivered" <%=order.status==='Delivered' ? 'selected' : '' %>>Delivered
+                          </option>
+                          <option value="Cancelled" <%=order.status==='Cancelled' ? 'selected' : '' %>>Cancelled
+                          </option>
+                          <option value="Returned" <%=order.status==='Returned' ? 'selected' : '' %>>Returned</option>
+                      </select>
+                    </form>
+                  </td>
+                </tr>
+                <% }); %>
+            </tbody>
+
+
+          </table>
+          <div class="pagination">
+            <% if (currentPage> 1) { %>
+              <a href="/admin/admin-order?page=<%= currentPage - 1 %>">Previous</a>
+              <% } %>
+
+                <% for (let i=1; i <=totalPages; i++) { %>
+                  <a href="/admin/admin-order?page=<%= i %>" class="<%= i === currentPage ? 'active' : '' %>">
+                    <%= i %>
+                  </a>
+                  <% } %>
+
+                    <% if (currentPage < totalPages) { %>
+                      <a href="/admin/admin-order?page=<%= currentPage + 1 %>">Next</a>
+                      <% } %>
+          </div>
+          <% } else { %>
+            <p>No orders found.</p>
+            <% } %>
+
+
+
+      </div>
+
+      <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+      <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+
+      <script>
+
+        function notificationBtn(orderId, reason) {
+          console.log(reason);
+
+          Swal.fire({
+            title: 'Return Request',
+            text: reason,
+            icon: 'info',
+            showCancelButton: true,
+            confirmButtonText: 'Approve',
+            cancelButtonText: 'Reject'
+          }).then((result) => {
+            if (result.isConfirmed) {
+
+              axios.post('/admin/approvReturnOrder', { orderId })
+                .then(res => {
+                  if (res.data.success) {
+                    Swal.fire({
+                      title: 'Success',
+                      text: 'The return request has been approved successfully!',
+                      icon: 'success',
+                      confirmButtonText: 'OK'
+                    })
+                      .then(resp => {
+                        document.getElementById(`noti-btn-${orderId}`).style.display = 'none'
+                        document.getElementById(`status-${orderId}`).innerHTML = 'Returned'
+                      })
+                  } else {
+                    Swal.fire({
+                      title: 'Error',
+                      text: res.data.message || 'Something went wrong!',
+                      icon: 'error',
+                      confirmButtonText: 'OK'
+                    });
+                  }
+                })
+                .catch(error => {
+                  Swal.fire({
+                    title: 'Error',
+                    text: 'An error occurred while processing the approval.',
+                    icon: 'error',
+                    confirmButtonText: 'OK'
+                  });
+                });
+            } else if (result.dismiss === Swal.DismissReason.cancel) {
+
+              Swal.fire({
+                title: 'Rejected',
+                text: 'The return request has been rejected.',
+                icon: 'warning',
+                confirmButtonText: 'OK'
+              });
+            }
+          }).catch(error => {
+            Swal.fire({
+              title: 'Error',
+              text: 'An error occurred while processing your request.',
+              icon: 'error',
+              confirmButtonText: 'OK'
+            });
+          });
+        }
+
+
+      </script>
+      <script>
+        async function updateStatus(orderId, status) {
+          try {
+
+            const response = await axios.post(`/admin/adminOrder/${orderId}`, { status });
+
+            if (response.status === 200) {
+
+              if (response.data.status === 'Cancelled', response.data.status === 'Delivered') {
+                const selectElement = document.querySelector(`select[data-id="${orderId}"]`)
+                selectElement.disabled = true
+              }
+
+
+            } else {
+              alert('Failed to update order status. Please try again.');
+            }
+          } catch (error) {
+            console.error('Error updating status:', error);
+            alert('An error occurred while updating the order status.');
+          }
+        }
+      </script>
+
+
+      <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
+      <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.min.js"></script>
+      <style>
+        .noti-btn {
+          background-color: red;
+          border: none;
+          border-radius: 50%;
+          width: 15px;
+          height: 15px;
+          cursor: pointer;
+          padding: 0;
+          box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
+          position: relative;
+        }
+
+        .noti-btn:hover {
+          background-color: darkred;
+        }
+
+        .noti-btn:active {
+          transform: scale(0.9);
+        }
+      </style>
+</body>
+
+</html>

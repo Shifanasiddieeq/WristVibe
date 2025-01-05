@@ -7,7 +7,6 @@
     <link rel="stylesheet" href="/style/admin/user.css"> 
 </head>
 <body>
-    <!-- <%- include('partial/sidebar') %> -->
     <div class="admin-dashboard">
       
         <aside class="sidebar">
@@ -17,8 +16,13 @@
                     
                     <li><a href="/admin/dashboard">Dashboard</a></li>
                     <li><a href="/admin/products">Products</a></li>
-                    <li><a href="/admin/users" class="active">Users</a></li>
+                    <li><a href="/admin/users">Users</a></li>
                     <li><a href="/admin/categories">Category</a></li>
+                    <li><a href="/admin/admin-order">Order</a></li>
+                    <li><a href="/admin/coupon">Coupon</a></li>
+                    <li><a href="/admin/offer">Offer</a></li>
+                    <li><a href="/admin/salesReport">Sales Report</a></li> 
+            
                    
                 </ul>
             </nav>
@@ -28,12 +32,7 @@
         <main class="content">
             <header>
                 <h1>Users</h1>
-                <!-- <div class="user-info">
-                    <span>Shifana</span>
-                    <small>Admin</small>
-                </div> -->
             </header>
-
            
             <section>
                 <table class="user-table">
@@ -95,30 +94,58 @@
 
     </div>
 
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    
     <script>
-        async function updateUserStatus(userId, block) {
-            try {
-                const response = await fetch(`/admin/users/${userId}/status`, {
-                    method: 'PATCH',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({ block })
-                });
-
-                const result = await response.json();
-                if (result.success) {
-                    alert(result.message);
-                    location.reload(); 
-                } else {
-                    alert('Failed to update user status');
-                }
-            } catch (error) {
-                console.error(error);
-                alert('Error updating user status');
+      async function updateUserStatus(userId, block) {
+        const action = block ? 'Block' : 'Unblock';
+    
+        const result = await Swal.fire({
+          title: `Are you sure you want to ${action} this user?`,
+          icon: 'warning',
+          showCancelButton: true,
+          confirmButtonColor: '#d33',
+          cancelButtonColor: '#3085d6',
+          confirmButtonText: `Yes, ${action}!`,
+        });
+    
+        if (result.isConfirmed) {
+          try {
+           
+            const response = await axios.patch(`/admin/users/${userId}/status`, {
+              block: block,
+            });
+    
+            if (response.data.success) {
+              Swal.fire({
+                icon: 'success',
+                title: response.data.message,
+                showConfirmButton: false,
+                timer: 1500,
+              });
+    
+          
+              setTimeout(() => location.reload(), 1500);
+            } else {
+              Swal.fire({
+                icon: 'error',
+                title: 'Failed to update user status',
+                text: response.data.message || 'Something went wrong!',
+              });
             }
+          } catch (error) {
+            console.error(error);
+            Swal.fire({
+              icon: 'error',
+              title: 'Error updating user status',
+              text: error.message || 'An unexpected error occurred!',
+            });
+          }
         }
+      }
     </script>
+
 <style>
 .pagination {
     margin: 20px 0;
