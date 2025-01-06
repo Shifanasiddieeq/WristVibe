@@ -8,6 +8,7 @@ const { countDocuments } = require('../../model/adminModel');
 const walletSchema = require('../../model/walletModel');
 const orderModel = require('../../model/orderModel');
 const couponSchema = require('../../model/couponModel')
+const offerSchema = require('../../model/offerModel')
 const PDFDocument = require('pdfkit');
 const fs = require('fs');
 
@@ -33,7 +34,17 @@ const placeOrder = async (req, res) => {
     const couponDiscount = req.session.couponDiscount ? req.session.couponDiscount : 0
     const OrderTotalPrice = (cart.cartTotalPrice + shippingfee) - couponDiscount
     console.log(couponDiscount);
+
+
+    const productIds = cart.items.map(item => item.productId._id)
     
+    const offers = await offerSchema.find({
+      selectedProducts: { $in: productIds }
+    });
+
+    const offerDiscount = offers.reduce((acc,item) => acc + item.discountAmount, 0)
+
+
 
     let orderData = {};
     if(payment == 'COD'){
@@ -56,7 +67,8 @@ const placeOrder = async (req, res) => {
         totalPrice:  OrderTotalPrice,
         paymentMethod: payment,
         paymentStatus ,
-        couponDiscount : req.session.couponDiscount
+        couponDiscount : req.session.couponDiscount,
+        offerDiscount,
       }
     } else if(payment == 'RAZORPAY'){
       orderData = {
@@ -77,7 +89,8 @@ const placeOrder = async (req, res) => {
         totalPrice:OrderTotalPrice,
         paymentMethod: payment,
         paymentStatus,
-        couponDiscount : req.session.couponDiscount
+        couponDiscount : req.session.couponDiscount,
+        offerDiscount,
       };
     }
 
@@ -123,7 +136,7 @@ const placeOrder = async (req, res) => {
     console.error(`error from order success : ${err}`);
     res.status(500).send('Server Error');
   }
-};
+}; 
 
 
 const getOrders = async (req, res) => {
@@ -316,66 +329,6 @@ const retryPayment=async(req,res)=>{
  
 }
 
-
-// const downloadInvoice=async(req,res)=>{
-
-//   const { orderId } = req.params;
-
-//   try {
-    
-//       const order = await Order.findById(orderId).populate('userId');
-
-//       if (!order) {
-//           return res.status(404).json({ message: 'Order not found' });
-//       }
-
-//       if (order.status !== 'Delivered') {
-//           return res.status(400).json({ message: 'Invoice is only available for delivered orders.' });
-//       }
-
-    
-//       const doc = new PDFDocument();
-//       const filePath = `invoices/order-${orderId}.pdf`;
-
-//       doc.pipe(fs.createWriteStream(filePath));
-//       doc.pipe(res); 
-
-   
-//       doc.fontSize(20).text('Wrist Vibe Invoice', { align: 'center' });
-//       doc.moveDown();
-
-//       doc.fontSize(14).text(`Order ID: ${orderId}`);
-//       doc.text(`Customer: ${order.customer.userName}`);
-//       doc.text(`Email: ${order.customer.email}`);
-//       doc.text(`Address: ${order.customer.address.houseNo}, ${order.customer.address.area}, ${order.customer.address.town}, ${order.customer.address.state} - ${order.customer.address.pincode}`);
-//       doc.text(`Order Date: ${order.orderDate.toDateString()}`);
-//       doc.text(`Payment Method: ${order.paymentMethod}`);
-//       doc.text(`Payment Status: ${order.paymentStatus}`);
-//       doc.moveDown();
-
-  
-//       doc.text('Products:', { underline: true });
-//       order.products.forEach((product, index) => {
-//           doc.text(`${index + 1}. ${product.productName} - Qty: ${product.quantity}, Price: ₹${product.price}, Total: ₹${product.total}`);
-//       });
-//       doc.moveDown();
-
-//       doc.text(`Total Price: ₹${order.totalPrice}`);
-//       if (order.couponDiscount) {
-//           doc.text(`Discount: ₹${order.couponDiscount}`);
-//       }
-//       doc.text(`Final Price: ₹${order.totalPrice - (order.couponDiscount || 0)}`);
-//       doc.moveDown();
-
-//       doc.text('Thank you for shopping with Wrist Vibe!', { align: 'center' });
-
-//       doc.end();
-//   } catch (error) {
-//       console.error(error);
-//       res.status(500).json({ message: 'Something went wrong.' });
-//   }
-
-// }
 
 
 const downloadInvoice = async (req, res) => {

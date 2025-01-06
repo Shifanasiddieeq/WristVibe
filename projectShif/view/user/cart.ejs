@@ -279,58 +279,9 @@
 
     </div>
 
-    <!-- <script>
-             async function updateQuantity(productId, newQuantity) {
-                
-        try {
-            
-            // Check if the quantity is within the allowed limit (1 to 5)
-            if (newQuantity < 1 || newQuantity > 5) {
-                alert('Quantity must be between 1 and 5');
-                return;
-            }
-
-            // Send an AJAX request to update the quantity
-            const response = await fetch(`/updateQuantity`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({ productId, newQuantity }),
-            });
-
-            const data = await response.json();
-
-            if (response.ok) {
-                // Update the price and quantity on the frontend
-                const totalPriceElement = document.querySelector(`#total-price-${productId}`);
-                
-                // const price = data.price; // The updated price from the server
-                const totalPrice = data.totalPrice; // Updated total price
-                totalPriceElement.innerText = `Rs. ${data.totalPrice.toFixed(2)}`;
-
-                // Optionally, you can also update the cart total
-                document.querySelector('#cart-totalprice').innerHTML = `Rs. ${data.cartTotalPrice.toFixed(2)}`;
-
-            } else {
-                alert(data.message || 'Error updating quantity');
-            }
-        } catch (error) {
-            console.error('Error:', error);
-        }
-    }
-        </script> -->
 
 
     <script>
-
-
-        // document.getElementById("checkoutButton").addEventListener("click", function () {
-
-        //     window.location.href = "/checkout";
-        // });
-
-
 
 
         async function updateQuantity(productId, newQuantity) {
@@ -418,25 +369,7 @@
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
    
     <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
-<!-- 
-    <script>
-  document.getElementById("checkoutButton").addEventListener("click", async function () {
-    try {
-     
-      await axios.get('/proceedToCheckout')
-      .then(res => {
-        if(res.data.success){
-            window.location.href = res.data.redirect
-        }
-        
-      })
-      console.log('kkkkkkloimg');
-      
-    } catch (error) {
-        console.log(error.response.data.message);
-    }
-  });
-</script> -->
+
 
    
 <script>

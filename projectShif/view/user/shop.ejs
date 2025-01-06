@@ -173,38 +173,6 @@
 			</div>
 
 
-<!-- 
-		<div class="products-container">
-    <% products.forEach(product => { %>
-        <div class="product-card">
-            <a href="/productDetails/<%= product._id %>">
-                <img src="<%= product.images[0] %>" alt="Product Image" class="product-image">
-            </a>
-            <div class="product-details">
-                <h3 class="product-name">
-                    <%= product.productName %>
-                </h3>
-                <p class="product-category" style="margin-bottom: 8px;">
-                   
-					<%= product.category ? product.category.name : 'Uncategorized' %>
-                </p>
-
-                <% if (product.bestOffer && product.bestOffer.discountAmount > 0) { %>
-                    <span style="text-decoration: line-through; color: gray;">₹<%= product.price.toFixed(2) %></span>
-                    <span class="product-price" style="margin-left: 10px;"> ₹<%= (product.price - product.bestOffer.discountAmount).toFixed(2) %></span>
-                    <p style="font-size: 1rem;" class="text-success mt-1"> (Save ₹<%= product.bestOffer.discountAmount.toFixed(2) %>)</p>
-                <% } else { %>
-                    <p class="product-price">₹<%= product.price.toFixed(2) %></p>
-                <% } %>
-            </div>
-            <div class="icons-container">
-               
-            </div>
-        </div>
-    <% }) %>
-</div> -->
-
-
 <div class="products-container">
     <% products.forEach(product => { %>
         <div class="product-card">
@@ -227,16 +195,7 @@
                     <p id="price" class="product-price">₹<%= product.price.toFixed(2) %></p>
                 <% } %>
             </div>
-            <div class="icons-container">
-                <!-- Add to Cart Icon -->
-				<button onclick="addtocart('<%= product._id %>')">
-                <i class="fas fa-shopping-cart add-to-cart" title="Add to Cart"></i>
-			   </button>
-                <!-- Add to Wishlist Icon -->
-				<button onclick="addToWishlist('<%= product._id %>')">
-                <i class="fas fa-heart add-to-wishlist"  title="Add to Wishlist"></i>
-				</button>
-            </div>
+ 
         </div>
     <% }) %>
 </div>

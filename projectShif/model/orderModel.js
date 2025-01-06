@@ -49,7 +49,8 @@ const orderSchema = new mongoose.Schema({
         reason:{type:String},
         approve:{type:Boolean,default:false}
 
-    }
+    },
+    offerDiscount: { type: Number, required: true }
    },{ timestamps: true });
 
 

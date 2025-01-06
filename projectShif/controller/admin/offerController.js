@@ -53,11 +53,6 @@ const addOffer = async (req, res) => {
     if (minimumPrice < 50) {
       return res.status(400).json({ message: 'Minimum Price cannot be less than 50' });
     }
-    // if (minimumPrice < discountAmount / 2) {
-    //   return res.status(400).json({
-    //     message: 'Offer not applicable: Minimum Price cannot be less than half of the Discount Amount',
-    //   });
-    // }
  
     const existingOffer = await offerSchema.findOne({ title });
 
@@ -66,19 +61,6 @@ const addOffer = async (req, res) => {
         message: "Offer with this name already exists.",
       });
     }
-    // const productId=req.params.id
-    // const product = await productSchema.find();
-    //     if (!product) {
-    //       return res.status(400).json({ message: `Product with ID  does not exist.` });
-    //     }
-
-    //     const productPrice = product.price;
-
-    //     if (discountAmount > productPrice / 2) {
-    //       return res.status(400).json({
-    //         message: `Offer not applicable: Discount amount cannot be greater than half the price of product (${productPrice}) for product ${product.productName}.`,
-    //       });
-    //     }
 
     const newOffer = new offerSchema({
       title,
@@ -88,20 +70,6 @@ const addOffer = async (req, res) => {
       endDate,  
       targetType,
     });
-
-    // if (Array.isArray(selectedItems)) {
-    //   selectedItems.forEach(item => {
-    //     if (item && (typeof item === 'string' || item instanceof Object)) {
-    //       if (targetType === "Product") {
-    //         newOffer.selectedProducts.push(item);
-    //       } else if (targetType === "Category") {
-    //         newOffer.selectedCategory.push(item);
-    //       }
-    //     } else {
-    //       console.error('Invalid item in selectedItems:', item);
-    //     }
-    //   });
-    // }
 
 
     if (Array.isArray(selectedItems)) {
@@ -160,9 +128,7 @@ const editOffer = async (req, res) => {
       if (discountAmount < 0) {
         return res.status(400).json({ message: 'Discount amount cannot be negative' });
       }
-      // if (discountAmount > 50) {
-      //   return res.status(400).json({ message: 'Discount amount cannot be more than 50' });
-      // }
+ 
     }
   
     const offer = await offerSchema.findById(offerId);

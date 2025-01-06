@@ -2,6 +2,7 @@ const userModel = require('../model/userModel')
 
 const checkSession = async (req, res, next) => {
     const user = await userModel.findById(req.session.user)
+
     
     if (!user) {
        return res.redirect('/login')

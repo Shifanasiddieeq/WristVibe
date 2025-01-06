@@ -4,23 +4,7 @@ const Product = require('../../model/productModel')
 const { findBestOffer } = require('../../Service/bestOffer')
 const Offer = require('../../model/offerModel')
 const categorySchema = require('../../model/categoryModel');
-// const loadHome=async(req,res)=>
-// {
-   
-//     try {
-       
-//         const products = await Product.find({isListed:true})
-        
 
-//         res.render('user/home', {
-//             products,
-          
-//         });
-//     } catch (error) {
-//         console.error(error);
-//         res.status(500).send('Server Error');
-//     }
-// }
 
 const loadHome = async (req, res) => {
     try {

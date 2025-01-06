@@ -2,25 +2,6 @@
 const walletSchema = require("../../model/walletModel");
 const userSchema = require('../../model/userModel');
 
-// const loadWallet = async (req, res) => {
-//   try {
-//     const userId = req.session.user;
-
-//     const user = await userSchema.findById(userId);
-//     const wallet = await walletSchema.findOne({ userId });
-
-//     if (!wallet) {
-//       const newWallet = await walletSchema.create({ userId });
-//       return res.render('user/wallet', { user, wallet: newWallet });
-//     }
-
-//     res.render('user/wallet', { user, wallet });
-
-//   } catch (err) {
-//     console.error(err);
-//     return res.status(500).json({ message: "Failed to load wallet data." });
-//   }
-// };
 
 const loadWallet = async (req, res) => {
   try {

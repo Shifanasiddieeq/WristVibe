@@ -217,57 +217,6 @@ const removeItemFromCart = async (req, res) => {
     }
 };
 
-// const proceedtoCheckout = async (req, res) => {
-//     const userId = req.session.user;
-  
-//     try {
-     
-//       if (!userId) {
-//         return res.status(401).send("Unauthorized: User not logged in");
-//       }
-  
-
-//       const cart = await Cart.findOne({ userId });
-  
-//       if (!cart) {
-//         return res.status(404).send("Cart not found");
-//       }
-  
-//       for (let item of cart.items) {
-//         const product = await productModel.findById(item.productId); 
-//         console.log(product,'Apppppppppppppppp');
-  
-//         if (!product) {
-//           return res
-//             .status(404)
-//             .send(`Product with ID ${item.productId} not found`);
-//         }
-  
-//         if (item.quantity <= 0) {
-//           return res
-//             .status(400)
-//             .send(
-//               `Invalid quantity for product: ${product.name}. Quantity must be greater than 0.`
-//             );
-//         }
-  
-//         if (item.quantity > product.stock) {
-//           return res
-//             .status(400)
-//             .send(
-//               `Not enough stock for product: ${product.name}. Available stock: ${product.stock}`
-//             );
-//         }
-//       }
-  
-
-//       res.status(200).send("Checkout validation successful");
-//     } catch (error) {
-//       console.error("Error during checkout validation:", error);
-//       res.status(500).send("Failed to proceed to checkout");
-//     }
-//   };
-  
 
 const proceedtoCheckout = async (req, res) => {
     const userId = req.session.user;
@@ -289,7 +238,7 @@ const proceedtoCheckout = async (req, res) => {
         let cartTotalPrice = cart.cartTotalPrice;
         
         for (let item of cart.items) {
-            const product = await productModel.findById(item.productId);
+            const product = await productModel.findById(item.productId).populate('category')
             
             if (!product) {
                 return res
@@ -303,25 +252,15 @@ const proceedtoCheckout = async (req, res) => {
                 .json({message:`Product ${product.productName} is  currently unavailable.`});
             }
 
-
-            // console.log('g',product);
-            // if (!product.category.isListed) {
-            //     return res.status(400).json({
-            //       message: `Product ${product.productName} belongs to an unavailable category.`,
-            //     });
-            //   }
+      
+            
+            if (!product.category.isListed) {
+                return res.status(400).json({
+                  message: `Product ${product.productName} belongs to an unavailable category.`,
+                });
+              }
 
               
-
-
-
-
-            // if (!product.category || !product.category.isListed) {
-            //     return res.status(400).json({
-            //       message: `Product ${product.productName} belongs to an unavailable category.`,
-            //     });
-            //   }
-
 
             
             if (item.quantity <= 0) {
@@ -341,24 +280,10 @@ const proceedtoCheckout = async (req, res) => {
                 );
             }
             
-            // item.price = product.price;
-            // console.log(item.price,'item.price');
-            
-            // item.totalPrice = item.quantity * product.price;
-            // console.log(item.totalPrice,'item.totalPrice');
-            
-            
-            // cartTotalPrice += item.totalPrice;
-            // console.log( cartTotalPrice,' cartTotalPrice');
-            
+       
         }
         
-        // cart.cartTotalPrice = cartTotalPrice;
-        
-        
-        // await cart.save();
-        
-        // res.status(200).send("Checkout validation successful");
+ 
         res.status(200).json({success:true,redirect:'/checkout'})
     } catch (error) {
         console.error("Error during checkout validation:", error);

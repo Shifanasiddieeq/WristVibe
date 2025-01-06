@@ -35,7 +35,7 @@ const loadAddproduct = async (req, res) => {
     try {
         const products = await Product.find({});
         const categories = await Category.find({ isListed: true });
-        res.render('admin/addProduct', { products, categories });
+        res.render('admin/addproduct', { products, categories });
     } catch (error) {
         console.error('Error fetching products:', error);
         res.status(StatusCodes.INTERNAL_SERVER_ERROR).send('Internal Server Error');

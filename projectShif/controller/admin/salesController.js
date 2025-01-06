@@ -188,7 +188,7 @@ const downloadSalesreport = async (req, res) => {
             const pageWidth = doc.page.width - doc.page.margins.left - doc.page.margins.right;
             const columnWidths = {
                 date: Math.floor(pageWidth * 0.15),          
-                orderId: Math.floor(pageWidth * 0.2),        
+                orderId: Math.floor(pageWidth * 0.05),        
                 customerName: Math.floor(pageWidth * 0.2),   
                 totalAmount: Math.floor(pageWidth * 0.15),   
                 couponDiscount: Math.floor(pageWidth * 0.15),
@@ -215,10 +215,10 @@ const downloadSalesreport = async (req, res) => {
             renderRow([
                 { text: 'Date', width: columnWidths.date, x: 20, y: doc.y },
                 { text: 'OrderId', width: columnWidths.orderId, x: 25 + columnWidths.date, y: doc.y },
-                { text: 'Customer Name', width: columnWidths.customerName, x: 100 + columnWidths.date + columnWidths.orderId, y: doc.y },
-                { text: 'Total Amount', width: columnWidths.totalAmount, x: 70 + columnWidths.date + columnWidths.orderId + columnWidths.customerName, y: doc.y },
-                { text: 'Coupon Discount', width: columnWidths.couponDiscount, x: 75 + columnWidths.date + columnWidths.orderId + columnWidths.customerName + columnWidths.totalAmount, y: doc.y },
-                { text: 'Offer Discount', width: columnWidths.offerDiscount, x: 70 + columnWidths.date + columnWidths.orderId + columnWidths.customerName + columnWidths.totalAmount + columnWidths.couponDiscount, y: doc.y },
+                { text: 'Customer ', width: columnWidths.customerName, x: 100 + columnWidths.date + columnWidths.orderId, y: doc.y },
+                { text: 'Total ', width: columnWidths.totalAmount, x: 70 + columnWidths.date + columnWidths.orderId + columnWidths.customerName, y: doc.y },
+                { text: 'Coupon ', width: columnWidths.couponDiscount, x: 75 + columnWidths.date + columnWidths.orderId + columnWidths.customerName + columnWidths.totalAmount, y: doc.y },
+                { text: 'Offer ', width: columnWidths.offerDiscount, x: 70 + columnWidths.date + columnWidths.orderId + columnWidths.customerName + columnWidths.totalAmount + columnWidths.couponDiscount, y: doc.y },
       
             ], true);
             
@@ -226,7 +226,8 @@ const downloadSalesreport = async (req, res) => {
             reportData.orders.forEach((order) => {
                 renderRow([
                     { text: new Date(order.orderDate).toLocaleDateString(), width: columnWidths.date, x: 20, y: doc.y },
-                    { text: order._id, width: columnWidths.orderId, x: 25 + columnWidths.date, y: doc.y },
+                    { text:  String(order._id).slice(0, 8), width: columnWidths.orderId, x: 25 + columnWidths.date, y: doc.y },
+
                     { text: order.customer?.userName || 'N/A', width: columnWidths.customerName, x: 100 + columnWidths.date + columnWidths.orderId, y: doc.y },
                     { text: `${order.totalPrice.toFixed(2)}`, width: columnWidths.totalAmount, x: 70 + columnWidths.date + columnWidths.orderId + columnWidths.customerName, y: doc.y },
                     { text: `${(order.couponDiscount ||0).toFixed(2)}`, width: columnWidths.couponDiscount, x: 75 + columnWidths.date + columnWidths.orderId + columnWidths.customerName + columnWidths.totalAmount, y: doc.y },

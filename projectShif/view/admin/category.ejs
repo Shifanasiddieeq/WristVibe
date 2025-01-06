@@ -103,25 +103,7 @@
         </main>
     </div>
 
-    <!-- Add Modal -->
-    <!-- <div id="addModal" class="modal">
-        <div class="modal-content">
-            <h2>Add Category</h2>
-            <form action="/admin/categories" method="POST" onsubmit="return validateForm()">
-                <label for="name">Name:</label>
-                <input type="text" id="name" name="name">
-                <label for="description">Description:</label>
-                <textarea id="description" name="description"></textarea>
-                <button type="submit" class="save-btn">Add</button>
-                <button type="button" class="cancel-btn"
-                    onclick="document.getElementById('addModal').style.display='none'">Cancel</button>
-            </form>
-        </div>
-    </div> -->
-
-
-
-
+  
 
 
     <div id="addModal" class="modal">
@@ -177,18 +159,31 @@
     
             try {
                 const response = await axios.post('/admin/categories', { name, description });
-    
+                console.log(response);
+                
                 if (response.status === 200) {
+                    console.log('yys');
+                    
                     Swal.fire({
                         icon: 'success',
                         title: 'Success',
                         text: 'Category added successfully!',
-                    });
-                    document.getElementById('addModal').style.display = 'none';
-                    // document.getElementById('addCategoryForm').reset();
-                    location.reload();
+                    })
+                    .then(res => {
+                        
+                        if(res.isConfirmed){
+                            console.log('lll');
+                            
+                            document.getElementById('addModal').style.display = 'none';
+                            location.reload();
+                        }
+                    })
+                  
+
                 }
             } catch (error) {
+                console.log('hhh');
+                
                 Swal.fire({
                     icon: 'error',
                     title: 'Error',
@@ -198,16 +193,7 @@
         });
     </script>
     <script>
-        // function validateForm() {
-        //     const name = document.getElementById('name').value.trim();
-        //     const description = document.getElementById('description').value.trim();
-
-        //     if (!name || !description) {
-        //         alert('Name and Description cannot be empty.');
-        //         return false;
-        //     }
-        //     return true;
-        // }
+  
 
         function validateEditForm() {
             const name = document.getElementById('editName').value.trim();

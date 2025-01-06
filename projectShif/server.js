@@ -19,6 +19,7 @@ app.set('views', path.join(__dirname, "view"))
 app.set('view engine', 'ejs')
 app.use(express.static('public'))
 app.use(express.urlencoded({ extended: true }))
+
 app.use(express.json())
 app.use(nocache())
 
@@ -29,11 +30,11 @@ app.use(session({
   cookie: {
     maxAge: 1000 * 60 * 60 * 24
   },
-  // store: MongoStore.create({
-  //   mongoUrl: 'mongodb://localhost:27017/myDatabase',
-  //   collectionName: 'sessions',
-  //   ttl: 24 * 60 * 60
-  // })
+  store: MongoStore.create({
+    mongoUrl: 'mongodb://localhost:27017/myDatabase',
+    collectionName: 'sessions',
+    ttl: 24 * 60 * 60
+  })
 }));
 
 app.use(passport.initialize());

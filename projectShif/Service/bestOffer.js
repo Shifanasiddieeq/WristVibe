@@ -4,9 +4,7 @@ const Product = require('../model/productModel');
 const Category=require('../model/categoryModel')
 
 const findBestOffer = (product, offers) => {
-    console.log('a', product);
-    console.log('b', offers);
-
+ 
 
     let bestOffer = null;
     const currentDate = new Date();
@@ -18,7 +16,7 @@ const findBestOffer = (product, offers) => {
         offer.isActive &&
         currentDate >= offer.startDate &&
         currentDate <= offer.endDate
-    ); console.log(productOffers, 'CC');
+    ); 
 
 
     const categoryOffers = offers.filter((offer) =>
@@ -29,15 +27,10 @@ const findBestOffer = (product, offers) => {
         currentDate >= offer.startDate &&
         currentDate <= offer.endDate
     );
-    console.log(categoryOffers, 'DD');
-
+  
 
 
     const allOffers = [...productOffers, ...categoryOffers];
-
-    console.log('====================================================================');
-    console.log(allOffers, 'EE');
-
 
 
     if (allOffers.length > 0) {
@@ -53,8 +46,7 @@ const findBestOffer = (product, offers) => {
         },
             null);
     }
-    console.log('Best......', bestOffer);
-
+ 
 
     return bestOffer;
 };

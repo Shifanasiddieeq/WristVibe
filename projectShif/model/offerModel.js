@@ -23,6 +23,7 @@ const offerSchema = new mongoose.Schema(
     selectedCategory: [
       { type: mongoose.Schema.Types.ObjectId, ref: "Category" },
     ],
+   
   },
   { timestamps: true }
 );

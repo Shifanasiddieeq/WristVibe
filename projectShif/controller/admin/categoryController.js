@@ -28,97 +28,6 @@ const loadCategories = async(req,res)=>{
 
 
 
-// const addCategory = async (req, res) => {
-//     try {
-//         const { name, description } = req.body;
-
-//         if (!name || !description) {
-//         const error = 'Name and Description cannot be empty.';
-//         return res.render('admin/categories', { error, success: null, categories: await Category.find() });
-//         }
-//         const trimmedName = name.trim().toLowerCase(); 
-       
-//         const oldCategory = await Category.findOne({ 
-//             name: { $regex: `^${trimmedName}$`, $options: 'i' }
-//           });
-
-//         // const oldCategory = await Category.findOne({ name: { $regex: `^${name}$`, $options: 'i' } });
-//  if(oldCategory){
-//     return res.status(400).json({message:"The category may alredy exist"})
-//  }
-
-//         // if (oldCategory) {
-//         //   return res.redirect('/admin/categories')
-//         // }
-//          const newCategory = new Category({ name, description });
-//         // const newCategory = new Category({ name: name.trim(), description });
-//          await newCategory.save();
-
-//         res.redirect('/admin/categories');
-//     } catch (error) {
-//         console.error(error);
-//         res.status(StatusCodes.INTERNAL_SERVER_ERROR).send('Failed to add category');
-//     }
-// };
-
-
-
-
-
-
-
-
-// const addCategory = async (req, res) => {
-//     try {
-//         const { name, description } = req.body;
-
-//         if (!name || !description) {
-//             return res.status(400).json({ message: 'Name and Description cannot be empty.' });
-//         }
-
-//         // const trimmedName = name.trim().toLowerCase();
-
-//         // const oldCategory = await Category.findOne({
-//         //     name: { $regex: `^${trimmedName}$`, $options: 'i' },
-//         // });
-
-//         // if (oldCategory) {
-//         //     return res.status(400).json({ message: 'The category already exist.' });
-//         // }
-
-//         // const newCategory = new Category({ name, description });
-//         // await newCategory.save();
-
-
-
-
-//         const trimmedName = name.trim();
-
-//         // Check for an existing category with the same name (case-insensitive)
-//         const existingCategory = await Category.findOne({
-//             name: { $regex: `^${trimmedName}$`, $options: 'i' }, // Regex for case-insensitive match
-//         });
-
-//         if (existingCategory) {
-//             return res.status(400).json({ message: 'Category already exists.' });
-//         }
-
-//         // Create and save the new category
-//         const newCategory = new Category({ 
-//             name: trimmedName, 
-//             description 
-//         });
-//         await newCategory.save();
-
-//         return res.status(200).json({ message: 'Category added successfully!' });
-//     } catch (error) {
-//         console.error(error);
-//         return res.status(500).json({ message: 'Failed to add category.' });
-//     }
-// };
-
-
-
 
 
 const addCategory = async (req, res) => {
@@ -130,27 +39,40 @@ const addCategory = async (req, res) => {
             return res.render('admin/categories', { error, success: null, categories: await Category.find() });
         }
 
-        // Normalize the input name (trim and convert to lowercase)
-        const normalizedInputName = name.trim().toLowerCase();
+        let normalizedInputName = name.toLowerCase().split(' ');
+        console.log(normalizedInputName);
+        
+        let word =''
+        for(let x of normalizedInputName){
+            if(x !=''){
+                 word = word + ' ' + x
+                 
+            }
+        }
 
-        // Check if a category with the same normalized name exists
+        word = word.trim()
+
         const oldCategory = await Category.findOne({
-            name: { $regex: `^${normalizedInputName}$`, $options: 'i' } // Case-insensitive exact match
+            name: { $regex: `^${word}$`, $options: 'i' } 
         });
+
+        console.log(oldCategory);
+        
 
         if (oldCategory) {
             const error = 'Category name already exists.';
-            return res.render('admin/categories', { error, success: null, categories: await Category.find() });
+        
+            return res.status(400).json({success:null,message:error})
         }
 
-        // Create and save the new category
+
         const newCategory = new Category({ 
             name: name.trim(), 
             description 
         });
         await newCategory.save();
 
-        res.redirect('/admin/categories');
+        res.status(200).json({success:false})
     } catch (error) {
         console.error(error);
         res.status(StatusCodes.INTERNAL_SERVER_ERROR).send('Failed to add category');
