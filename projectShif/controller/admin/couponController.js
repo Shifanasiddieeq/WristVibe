@@ -3,7 +3,7 @@ const couponSchema = require("../../model/couponModel");
 
 const loadCoupon = async (req, res) => {
     const currentPage = parseInt(req.query.page) || 1;
-    const limit = parseInt(req.query.limit) || 10;
+    const limit = parseInt(req.query.limit) || 5;
     const skip = (currentPage - 1) * limit;
   
     try {

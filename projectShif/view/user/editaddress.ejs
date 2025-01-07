@@ -73,62 +73,84 @@
             </form>
     </div>
 
-    <script>
-        function validateField(fieldId, errorMessage) {
-            const input = document.getElementById(fieldId);
-            const errorElement = document.getElementById(`${fieldId}Error`);
 
-            if (!input.value.trim()) {
-                errorElement.textContent = errorMessage;
+
+<script>
+    function validateField(fieldId, errorMessage) {
+        const input = document.getElementById(fieldId);
+        const errorElement = document.getElementById(`${fieldId}Error`);
+
+        if (!input.value.trim()) {
+            errorElement.textContent = errorMessage;
+        } else {
+            const value = input.value.trim();
+            const isValid = /^[a-zA-Z0-9]{3,}$/.test(value) && !/^[0@#$%^&*]+$/.test(value);
+            if (!isValid) {
+                errorElement.textContent = `${errorMessage} Must be at least 3 characters, not start with 0 or special characters, and not be all zeros or symbols.`;
             } else {
                 errorElement.textContent = '';
             }
         }
+    }
 
-        const addressForm = document.getElementById('addressForm');
-        addressForm.addEventListener('submit', function (event) {
-            let isValid = true;
+    function validatePincode() {
+        const pincodeInput = document.getElementById('pincode');
+        const pincodeError = document.getElementById('pincodeError');
+        const pincodeValue = pincodeInput.value.trim();
 
-            const fields = [
-                { id: 'houseNo', message: 'House No cannot be empty!' },
-                { id: 'area', message: 'Area cannot be empty!' },
-                { id: 'landmark', message: 'Landmark cannot be empty!' },
-                { id: 'town', message: 'Town cannot be empty!' },
-                { id: 'state', message: 'State cannot be empty!' }
-            ];
+        if (!pincodeValue) {
+            pincodeError.textContent = 'Pincode cannot be empty!';
+            return false;
+        }
 
-            fields.forEach(field => {
-                const input = document.getElementById(field.id);
-                const errorElement = document.getElementById(`${field.id}Error`);
-                if (!input.value.trim()) {
-                    errorElement.textContent = field.message;
-                    isValid = false;
-                }
-            });
+        const pincodeRegex = /^[1-9][0-9]{5}$/;
+        if (!pincodeRegex.test(pincodeValue)) {
+            pincodeError.textContent = 'Pincode must be a 6-digit number, cannot start with 0, and cannot contain special characters!';
+            return false;
+        } else {
+            pincodeError.textContent = '';
+            return true;
+        }
+    }
 
-            if (!isValid) {
-                event.preventDefault();
+    const addressForm = document.getElementById('addressForm');
+    addressForm.addEventListener('submit', function (event) {
+        let isValid = true;
+
+        const fields = [
+            { id: 'houseNo', message: 'House No cannot be empty!' },
+            { id: 'area', message: 'Area cannot be empty!' },
+            { id: 'landmark', message: 'Landmark cannot be empty!' },
+            { id: 'town', message: 'Town cannot be empty!' },
+            { id: 'state', message: 'State cannot be empty!' }
+        ];
+
+        // Validate each field using validateField
+        fields.forEach(field => {
+            validateField(field.id, field.message);
+            const errorElement = document.getElementById(`${field.id}Error`);
+            if (errorElement.textContent) {
+                isValid = false;
             }
         });
 
-        function validatePincode() {
-            const pincodeInput = document.getElementById('pincode');
-            const pincodeError = document.getElementById('pincodeError');
-            const pincodeValue = pincodeInput.value.trim();
-
-            if (!pincodeValue) {
-                pincodeError.textContent = 'Pincode cannot be empty!';
-                return;
-            }
-
-            const pincodeRegex = /^\d{6}$/;
-            if (!pincodeRegex.test(pincodeValue)) {
-                pincodeError.textContent = 'Pincode must be a 6-digit number!';
-            } else {
-                pincodeError.textContent = '';
-            }
+        // Validate pincode
+        if (!validatePincode()) {
+            isValid = false;
         }
-    </script>
+
+        // Prevent form submission if any field is invalid
+        if (!isValid) {
+            event.preventDefault();
+        }
+    });
+</script>
+
+
+
+
+
+
 </body>
 
 </html>

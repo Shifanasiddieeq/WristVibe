@@ -59,11 +59,11 @@
                 <div class="error-message" id="stateError"></div>
             </div>
             <button type="submit" class="btn btn-success">Save Address</button>
-            <button type="button" class="btn btn-danger" onclick="window.location.href='/addresses'">Cancel</button>
+            <button type="button" class="btn btn-danger" onclick="window.location.href='/address'">Cancel</button>
         </form>
     </div>
 
-    <script>
+    <!-- <script>
         function validateField(fieldId, errorMessage) {
             const input = document.getElementById(fieldId);
             const errorElement = document.getElementById(`${fieldId}Error`);
@@ -123,6 +123,102 @@
             pincodeError.textContent = ''; 
         }
     }   
+    </script> -->
+
+
+    <script>
+        function validateField(fieldId, errorMessage) {
+            const input = document.getElementById(fieldId);
+            const errorElement = document.getElementById(`${fieldId}Error`);
+            const value = input.value.trim();
+    
+            const invalidStart = /^[*@$!^#0]/; 
+            if (!value) {
+                errorElement.textContent = errorMessage;
+            } else if (value.length < 3) {
+                errorElement.textContent = errorMessage + " Minimum 3 characters required.";
+            } else if (invalidStart.test(value)) {
+                errorElement.textContent = errorMessage + " Cannot start with special characters or 0.";
+            } else if (fieldId === "houseNo" && value === "000") {
+                errorElement.textContent = "House No cannot be completely 0.";
+            } else {
+                errorElement.textContent = ""; 
+            }
+        }
+    
+    
+        function validatePincode() {
+            const pincodeInput = document.getElementById('pincode');
+            const pincodeError = document.getElementById('pincodeError');
+            const pincodeValue = pincodeInput.value.trim();
+    
+            if (!pincodeValue) {
+                pincodeError.textContent = 'Pincode cannot be empty!';
+                return;
+            }
+    
+            const pincodeRegex = /^\d{6}$/; 
+            if (!pincodeRegex.test(pincodeValue)) {
+                pincodeError.textContent = 'Pincode must be a 6-digit number!';
+            } else if (pincodeValue.startsWith("0")) {
+                pincodeError.textContent = 'Pincode cannot start with 0.';
+            } else {
+                pincodeError.textContent = ""; 
+            }
+        }
+    
+       
+        const addressForm = document.getElementById('addressForm');
+        addressForm.addEventListener('submit', function (event) {
+            let isValid = true;
+    
+            const fields = [
+                { id: 'houseNo', message: 'House No cannot be empty!' },
+                { id: 'area', message: 'Area cannot be empty!' },
+                { id: 'landmark', message: 'Landmark cannot be empty!' },
+                { id: 'town', message: 'Town cannot be empty!' },
+                { id: 'state', message: 'State cannot be empty!' }
+            ];
+    
+           
+            fields.forEach(field => {
+                const input = document.getElementById(field.id);
+                const errorElement = document.getElementById(`${field.id}Error`);
+                const value = input.value.trim();
+    
+                const invalidStart = /^[*@$!^#0]/; 
+                if (!value) {
+                    errorElement.textContent = field.message;
+                    isValid = false;
+                } else if (value.length < 3) {
+                    errorElement.textContent = field.message + " Minimum 3 characters required.";
+                    isValid = false;
+                } else if (invalidStart.test(value)) {
+                    errorElement.textContent = field.message + " Cannot start with special characters or 0.";
+                    isValid = false;
+                } else if (field.id === "houseNo" && value === "000") {
+                    errorElement.textContent = "House No cannot be completely 0.";
+                    isValid = false;
+                } else {
+                    errorElement.textContent = ""; 
+                }
+            });
+    
+            
+            const isValidPincode = validatePincode();
+            if (!isValidPincode) {
+                isValid = false;
+            }
+    
+            if (!isValid) {
+                event.preventDefault();
+            }
+        });
     </script>
+    
+
+
+
+
 </body>
 </html>

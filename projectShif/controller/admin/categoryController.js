@@ -114,6 +114,57 @@ const editCategory = async (req, res) => {
 };
 
 
+
+// const editCategory = async (req, res) => {
+//     try {
+//         const { id } = req.params;
+//         const { name, description } = req.body;
+
+//         if (!name || !description) {
+//             const categories = await Category.find();
+//             return res.render('admin/category', {
+//                 categories,
+//                 error: 'Name and Description cannot be empty.',
+//                 success: null,
+//             });
+//         }
+
+//         // Normalize the input name (trim spaces and lowercase)
+//         let normalizedInputName = name.toLowerCase().split(' ').filter(x => x !== '').join(' ').trim();
+
+//         // Check for an existing category with the same normalized name
+//         const existingCategory = await Category.findOne({
+//             name: { $regex: `^${normalizedInputName}$`, $options: 'i' }, // Case-insensitive check
+//             _id: { $ne: id }, // Exclude the current category being edited
+//         });
+
+//         if (existingCategory) {
+//             console.log('Category already exists.');
+//             const categories = await Category.find();
+//             return res.render('admin/category', {
+//                 categories,
+//                 error: 'Category name already exists.',
+//                 success: null,
+//             });
+//         }
+
+//         // Update category with trimmed and normalized name
+//         await Category.findByIdAndUpdate(id, {
+//             name: name.trim(),
+//             description,
+//         });
+
+//         res.redirect('/admin/categories');
+//     } catch (error) {
+//         console.error(error);
+//         res.status(StatusCodes.INTERNAL_SERVER_ERROR).send('Failed to edit category');
+//     }
+// };
+
+
+
+
+
 const categoryStatus = async (req, res) => {
     try {
         const { id } = req.params;

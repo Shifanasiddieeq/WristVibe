@@ -15,7 +15,7 @@ const loadWallet = async (req, res) => {
 
     if (!wallet) {
       const newWallet = await walletSchema.create({ userId });
-      return res.render('user/wallet', { user, wallet: newWallet, currentPage: page, totalPages: 1 });
+      return res.render('user/wallet', { user, wallet: newWallet,transactions:null, currentPage: page, totalPages: 1 });
     }
 
     const totalTransactions = wallet.transactions.length; 

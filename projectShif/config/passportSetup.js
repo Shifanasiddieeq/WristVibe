@@ -34,7 +34,7 @@ passport.use(new GoogleStrategy({
             }
         } else {
       
-            const randomPassword = Math.random().toString(36).slice(-8) + 'A1@';
+            const randomPassword = 'wristvibe@google'
             
             user = await User.create({
                 name: profile.displayName,

@@ -290,6 +290,58 @@
 
 
 
+
+
+  //   function validateForm(event) {
+  // event.preventDefault();
+  // let isValid = true;
+
+  // const fields = ["houseNo", "area", "landmark", "town", "pincode", "state"];
+  // const textPattern = /^(?!0)(?!.*[^a-zA-Z0-9]).{3,}$/; // At least 3 characters, no special characters, and cannot start with 0
+  // const pincodePattern = /^[1-9][0-9]{5}$/; // Exactly 6 digits, cannot start with 0
+
+  // fields.forEach((fieldId) => {
+  //   const input = document.getElementById(fieldId);
+  //   const errorField = document.getElementById(fieldId + "Error");
+
+  //   // General required field check
+  //   if (input.value.trim() === "") {
+  //     errorField.textContent = `${input.placeholder} is required.`;
+  //     errorField.style.display = "block";
+  //     isValid = false;
+  //   } else if (fieldId === "pincode") {
+  //     // Pincode-specific validation
+  //     if (!pincodePattern.test(input.value.trim())) {
+  //       errorField.textContent = "Pincode must be exactly 6 digits and cannot start with 0 or contain special characters.";
+  //       errorField.style.display = "block";
+  //       isValid = false;
+  //     } else {
+  //       errorField.textContent = "";
+  //       errorField.style.display = "none";
+  //     }
+  //   } else {
+  //     // Validation for other fields
+  //     if (!textPattern.test(input.value.trim())) {
+  //       errorField.textContent = `${input.placeholder} must be at least 3 characters, cannot start with 0, or be completely 0 or special characters.`;
+  //       errorField.style.display = "block";
+  //       isValid = false;
+  //     } else {
+  //       errorField.textContent = "";
+  //       errorField.style.display = "none";
+  //     }
+  //   }
+  // });
+
+  // if (isValid) {
+  //   alert("Form submitted successfully!");
+  //   document.getElementById("placeOrderForm").submit(); // Submit form
+  // } else {
+  //   return false; // Prevent submission if validation fails
+  // }
+
+
+
+
       const address = {
         houseNo: document.getElementById('houseNo').value.trim(),
         area: document.getElementById('area').value.trim(),
