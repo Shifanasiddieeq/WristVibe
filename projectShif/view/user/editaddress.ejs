@@ -84,7 +84,8 @@
             errorElement.textContent = errorMessage;
         } else {
             const value = input.value.trim();
-            const isValid = /^[a-zA-Z0-9]{3,}$/.test(value) && !/^[0@#$%^&*]+$/.test(value);
+            // const isValid = /^[a-zA-Z0-9]{3,}$/.test(value) && !/^[0@#$%^&*]+$/.test(value);
+            const isValid = /^[a-zA-Z0-9+\-\(\)\[\]]{3,}$/.test(value) && !/^[0@#$%^&*+\-\(\)\[\]]+$/.test(value);
             if (!isValid) {
                 errorElement.textContent = `${errorMessage} Must be at least 3 characters, not start with 0 or special characters, and not be all zeros or symbols.`;
             } else {
@@ -125,7 +126,7 @@
             { id: 'state', message: 'State cannot be empty!' }
         ];
 
-        // Validate each field using validateField
+   
         fields.forEach(field => {
             validateField(field.id, field.message);
             const errorElement = document.getElementById(`${field.id}Error`);
@@ -134,12 +135,11 @@
             }
         });
 
-        // Validate pincode
         if (!validatePincode()) {
             isValid = false;
         }
 
-        // Prevent form submission if any field is invalid
+     
         if (!isValid) {
             event.preventDefault();
         }

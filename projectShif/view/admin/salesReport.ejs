@@ -206,15 +206,15 @@
       reportBody.innerHTML = '';
 
       if (data.orders && data.orders.length > 0) {
-        data.orders.forEach((order) => {
+        data.orders.forEach((order,index) => {
           const row = `
             <tr>
+              <td>${index+1}</td>
               <td>${new Date(order.orderDate).toLocaleDateString()}</td>
               <td>${order._id}</td>
               <td>${order.customer?.userName || 'N/A'}</td>
               <td>₹${(order.totalPrice || 0).toFixed(2)}</td>
               <td>₹${(order.couponDiscount || 0).toFixed(2)}</td>
-              <td>₹${(order.offerDiscount || 0).toFixed(2)}</td>
               <td>₹${(order.offerDiscount || 0).toFixed(2)}</td>
             </tr>
           `;

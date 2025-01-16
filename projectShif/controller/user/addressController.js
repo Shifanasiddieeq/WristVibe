@@ -36,7 +36,8 @@ const saveAddres=async(req,res)=>{
         const { houseNo, area, landmark, town, pincode, state } = req.body;
     
         if (!houseNo || !area || !landmark || !town || !pincode || !state) {
-            return res.status(StatusCodes.BAD_REQUEST).send('All required fields must be filled!');
+            // return res.status(StatusCodes.BAD_REQUEST).json({message:'All required fields must be filled!'});
+            return false
         }
 
         const userId=req.session.user

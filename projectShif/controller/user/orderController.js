@@ -331,6 +331,87 @@ const retryPayment=async(req,res)=>{
 
 
 
+// const downloadInvoice = async (req, res) => {
+//   const { orderId } = req.params;
+
+//   try {
+//     const order = await Order.findById(orderId).populate('userId');
+
+//     if (!order) {
+//       return res.status(404).json({ message: 'Order not found' });
+//     }
+
+//     if (order.status !== 'Delivered') {
+//       return res.status(400).json({ message: 'Invoice is only available for delivered orders.' });
+//     }
+
+//     const doc = new PDFDocument();
+//     const filePath = `invoices/order-${orderId}.pdf`;
+
+//     doc.pipe(fs.createWriteStream(filePath));
+//     doc.pipe(res);
+
+
+//     doc.fontSize(24).text('Wrist Vibe Invoice', { align: 'center' });
+//     doc.moveDown();
+
+
+//     doc.fontSize(14);
+//     doc.text(`Order ID: ${orderId}`);
+//     doc.text(`Customer: ${order.customer.userName}`);
+//     doc.text(`Email: ${order.customer.email}`);
+//     doc.text(`Address: ${order.customer.address.houseNo}, ${order.customer.address.area}, ${order.customer.address.town}, ${order.customer.address.state} - ${order.customer.address.pincode}`);
+//     doc.text(`Order Date: ${order.orderDate.toDateString()}`);
+//     doc.text(`Payment Method: ${order.paymentMethod}`);
+//     doc.text(`Payment Status: ${order.paymentStatus}`);
+//     doc.moveDown();
+
+ 
+//     doc.fontSize(16).text('Products:', { underline: true });
+//     doc.moveDown();
+
+ 
+//     doc.fontSize(14).text(
+//       `No.  Product Name                Qty     Price     Total`,
+//       { align: 'left' }
+//     );
+//     doc.text(`----------------------------------------------------------`);
+//     doc.moveDown(0.5);
+
+  
+//     order.products.forEach((product, index) => {
+//       const productLine = `${(index + 1).toString().padEnd(5)} ${product.productName.padEnd(25)} ${product.quantity
+//         .toString()
+//         .padEnd(8)} ₹${product.price.toString().padEnd(9)} ₹${product.total}`;
+//       doc.text(productLine);
+//     });
+//     doc.moveDown();
+
+ 
+//     doc.text(`----------------------------------------------------------`);
+//     doc.text(`Total Price: ₹${order.totalPrice}`, { align: 'right' });
+//     if (order.couponDiscount) {
+//       doc.text(`Discount: ₹${order.couponDiscount}`, { align: 'right' });
+//     }
+//     doc.text(`Final Price: ₹${order.totalPrice - (order.couponDiscount || 0)}`, { align: 'right' });
+//     doc.moveDown();
+
+//     doc.fontSize(14).text('Thank you for shopping with Wrist Vibe!', { align: 'center' });
+
+//     doc.end();
+//   } catch (error) {     
+//     console.error(error);
+//     res.status(500).json({ message: 'Something went wrong.' });
+//   }
+// };
+
+
+
+
+
+
+
+
 const downloadInvoice = async (req, res) => {
   const { orderId } = req.params;
 
@@ -346,31 +427,33 @@ const downloadInvoice = async (req, res) => {
     }
 
     const doc = new PDFDocument();
-    const filePath = `invoices/order-${orderId}.pdf`;
 
-    doc.pipe(fs.createWriteStream(filePath));
+    // Set headers for file download
+    res.setHeader('Content-Type', 'application/pdf');
+    res.setHeader('Content-Disposition', `attachment; filename="order-${orderId}.pdf"`);
+
+    // Pipe the PDF document directly to the response
     doc.pipe(res);
 
-
+    // Create the PDF content
     doc.fontSize(24).text('Wrist Vibe Invoice', { align: 'center' });
     doc.moveDown();
-
 
     doc.fontSize(14);
     doc.text(`Order ID: ${orderId}`);
     doc.text(`Customer: ${order.customer.userName}`);
     doc.text(`Email: ${order.customer.email}`);
-    doc.text(`Address: ${order.customer.address.houseNo}, ${order.customer.address.area}, ${order.customer.address.town}, ${order.customer.address.state} - ${order.customer.address.pincode}`);
+    doc.text(
+      `Address: ${order.customer.address.houseNo}, ${order.customer.address.area}, ${order.customer.address.town}, ${order.customer.address.state} - ${order.customer.address.pincode}`
+    );
     doc.text(`Order Date: ${order.orderDate.toDateString()}`);
     doc.text(`Payment Method: ${order.paymentMethod}`);
     doc.text(`Payment Status: ${order.paymentStatus}`);
     doc.moveDown();
 
- 
     doc.fontSize(16).text('Products:', { underline: true });
     doc.moveDown();
 
- 
     doc.fontSize(14).text(
       `No.  Product Name                Qty     Price     Total`,
       { align: 'left' }
@@ -378,7 +461,6 @@ const downloadInvoice = async (req, res) => {
     doc.text(`----------------------------------------------------------`);
     doc.moveDown(0.5);
 
-  
     order.products.forEach((product, index) => {
       const productLine = `${(index + 1).toString().padEnd(5)} ${product.productName.padEnd(25)} ${product.quantity
         .toString()
@@ -387,7 +469,6 @@ const downloadInvoice = async (req, res) => {
     });
     doc.moveDown();
 
- 
     doc.text(`----------------------------------------------------------`);
     doc.text(`Total Price: ₹${order.totalPrice}`, { align: 'right' });
     if (order.couponDiscount) {
@@ -398,12 +479,20 @@ const downloadInvoice = async (req, res) => {
 
     doc.fontSize(14).text('Thank you for shopping with Wrist Vibe!', { align: 'center' });
 
+    // End the document
     doc.end();
-  } catch (error) {     
+  } catch (error) {
     console.error(error);
     res.status(500).json({ message: 'Something went wrong.' });
   }
 };
+
+
+
+
+
+
+
 
 
 module.exports = {

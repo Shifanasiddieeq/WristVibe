@@ -131,8 +131,11 @@
             const input = document.getElementById(fieldId);
             const errorElement = document.getElementById(`${fieldId}Error`);
             const value = input.value.trim();
-    
-            const invalidStart = /^[*@$!^#0]/; 
+            console.log('addddddddddddddddddddddddress');
+            
+            // const invalidStart = /^[*-+=@$!^#0]/; 
+            const invalidStart = /^[*=@$!^#0\-\+\(\)\[\]]/;
+
             if (!value) {
                 errorElement.textContent = errorMessage;
             } else if (value.length < 3) {
@@ -186,7 +189,9 @@
                 const errorElement = document.getElementById(`${field.id}Error`);
                 const value = input.value.trim();
     
-                const invalidStart = /^[*@$!^#0]/; 
+                // const invalidStart = /^[*-+@$!^#0]/; 
+                const invalidStart = /^[*=@$!^#0\-\+\(\)\[\]]/;
+
                 if (!value) {
                     errorElement.textContent = field.message;
                     isValid = false;
@@ -210,9 +215,9 @@
                 isValid = false;
             }
     
-            if (!isValid) {
-                event.preventDefault();
-            }
+            // if (!isValid) {
+            //     event.preventDefault();
+            // }
         });
     </script>
     
