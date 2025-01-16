@@ -26,7 +26,7 @@ router.get('/registerOTP', userSession.isLogin, userContoller.loadOtp)
 
 router.get('/home', userSession.checkSession, homeController.loadHome)
 router.get('/shop', userSession.checkSession, shopController.loadShop)
-router.get('/productDetails/:id', shopController.productDetails)
+router.get('/productDetails/:id',userSession.checkSession,shopController.productDetails)
 
 
 router.post('/verify-otp', userContoller.verifyOtp)
@@ -35,10 +35,10 @@ router.post('/user/resend-otp', userContoller.resendOtp)
 router.get('/logout', userContoller.logout);
 
 
-router.get('/forgotPassword', passwordController.forgotPassword)
+router.get('/forgotPassword',userSession.checkSession, passwordController.forgotPassword)
 router.post('/reset-password', passwordController.resetPassword)
 router.post('/verifyPassword', passwordController.verifyPasswordOTP)
-router.get('/changePassword', passwordController.changePassword)
+router.get('/changePassword', userSession.checkSession,passwordController.changePassword)
 router.post('/resendPasswordOTP', passwordController.resendPasswordOtp)
 router.post('/passwordChecks', passwordController.passwordChecks)
 
@@ -65,7 +65,7 @@ router.get('/checkout',userSession.checkSession,checkoutController.loadCheckout)
 router.post('/place-order',orderController.placeOrder)
 
 router.get('/orders', userSession.checkSession, orderController.getOrders)
-router.get('/orders/:orderId', orderController.viewOrder);
+router.get('/orders/:orderId',userSession.checkSession, orderController.viewOrder);
 router.put('/orders/cancel/:orderId', orderController.cancelOrder);
 router.put('/orders/return/:orderId', orderController.returnOrder);
 
@@ -89,8 +89,8 @@ router.get('/invoice/:orderId', orderController.downloadInvoice);
 router.post('/retry-payment',orderController.retryPayment)
 
 
-router.get('/proceedToCheckout',cartController.proceedtoCheckout)
-router.get('/aboutus',homeController.loadAbout)
-router.get('/contactus',homeController.loadContact)
+router.get('/proceedToCheckout',userSession.checkSession,cartController.proceedtoCheckout)
+router.get('/aboutus',userSession.checkSession,homeController.loadAbout)
+router.get('/contactus',userSession.checkSession,homeController.loadContact)
 module.exports = router
 

@@ -104,10 +104,11 @@ const productDetails = async (req, res) => {
             isListed: true,
         }).populate('category'); 
 
+        
         if (!product) {
             return res.status(404).send('Product not found or unlisted');
         }
-
+  
         
         const relatedProduct = await Product.find({
             isListed: true,
@@ -142,6 +143,9 @@ const productDetails = async (req, res) => {
             ? Math.max(0, product.price - bestOffer.discountAmount) 
             : product.price;
 
+        const categoryName = product.category.name
+            
+            
         res.render('user/productDetails', {
             product: {
                 ...product.toObject(),
@@ -149,6 +153,7 @@ const productDetails = async (req, res) => {
                 priceWithOffer,
             },
             relatedProduct,
+            categoryName
         });
     } catch (err) {
         console.error('Error loading product details:', err);

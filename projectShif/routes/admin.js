@@ -18,6 +18,8 @@ const { upload } = require('../middleware/imageUpload');
 const cartModel = require('../model/cartModel')
 
 
+
+
 router.get('/categories', Adminsession.checkSession, categoryController.loadCategories);
 router.post('/categories', Adminsession.checkSession, categoryController.addCategory);
 router.post('/categories/:id/edit', Adminsession.checkSession, categoryController.editCategory);
@@ -57,13 +59,13 @@ router.post('/addCoupon', couponController.addCoupon)
 router.patch('/coupon/edit/:id', couponController.editCoupon);
 router.delete('/coupon/delete/:couponId', couponController.deleteCoupon)
 
-router.get('/salesreport', salesController.loadSales)
+router.get('/salesreport', Adminsession.checkSession, salesController.loadSales)
 
 router.post('/sales-report', salesController.salesreport)
 
 
 
-router.get('/offer', offerController.loadOffer)
+router.get('/offer', Adminsession.checkSession, offerController.loadOffer)
 router.post('/addoffer', offerController.addOffer)
 router.put('/editOffer/:offerId',offerController.editOffer)
 router.put('/deleteOffers/:offerId',offerController.offerStatus);

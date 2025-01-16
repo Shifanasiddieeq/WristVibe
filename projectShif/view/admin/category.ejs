@@ -219,6 +219,103 @@
         }
 
     </script>
+    <!-- <script>
+    function validateEditForm() {
+        const name = document.getElementById('editName').value.trim();
+        const description = document.getElementById('editDescription').value.trim();
+        if (!name || !description) {
+            // Show error alert with SweetAlert
+            Swal.fire({
+                icon: 'error',
+                title: 'Validation Error',
+                text: 'Name and Description cannot be empty.',
+            });
+            return false;
+        }
+    
+        // If validation is successful, show success alert
+        Swal.fire({
+            icon: 'success',
+            title: 'Category Edited',
+            text: 'Your category has been successfully edited.',
+            timer: 1000,  // Automatically close after 1 second
+            timerProgressBar: true, 
+        });
+    
+        return true;
+    }
+    
+    function editCategory(id, name, description) {
+        document.getElementById('editModal').style.display = 'flex';
+        document.getElementById('editForm').action = `/admin/categories/${id}/edit`;
+        document.getElementById('editName').value = name;
+        document.getElementById('editDescription').value = description;
+    }
+    
+    function closeEditModal() {
+        document.getElementById('editModal').style.display = 'none';
+    }
+</script>     -->
+
+
+<!-- <script>
+    function validateEditForm() {
+        const name = document.getElementById('editName').value.trim();
+        const description = document.getElementById('editDescription').value.trim();
+
+        // Send form data to backend for editing the category (No local validation here)
+        const form = document.getElementById('editForm');
+        const formData = new FormData(form);
+        
+        fetch(form.action, {
+            method: 'POST',
+            body: formData,
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Category Edited',
+                    text: 'Your category has been successfully edited.',
+                    timer: 1000,  // Automatically close after 1 second
+                    timerProgressBar: true, 
+                }).then(() => {
+                    window.location.reload(); // Reload the page to see updated categories
+                });
+            } else {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error',
+                    text: data.message || 'Something went wrong. Please try again.',
+                });
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            Swal.fire({
+                icon: 'error',
+                title: 'Error',
+                text: 'An unexpected error occurred. Please try again later.',
+            });
+        });
+
+        return false; // Prevent the form from submitting normally, handled by fetch
+    }
+
+    function editCategory(id, name, description) {
+        document.getElementById('editModal').style.display = 'flex';
+        document.getElementById('editForm').action = `/admin/categories/${id}/edit`;
+        document.getElementById('editName').value = name;
+        document.getElementById('editDescription').value = description;
+    }
+
+    function closeEditModal() {
+        document.getElementById('editModal').style.display = 'none';
+    }
+</script> -->
+
+
 
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script>

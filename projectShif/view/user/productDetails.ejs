@@ -222,7 +222,6 @@
 							</span><br>
 							<%= product.productName %>
 						</h4>
-
 						<% if (product.bestOffer && product.bestOffer.discountAmount> 0) { %>
 							<span class="mtext-106 cl2" style="text-decoration: line-through; color: gray;">
 								₹<%= product.price.toFixed(2) %>
@@ -481,7 +480,7 @@
 						<h3>
 							<%= product.productName %>
 						</h3>
-						<p>Category: <%= product.category.name %>
+						<p> <%= categoryName %>
 						</p>
 						<p>Price: ₹<%= product.price.toFixed(2) %>
 						</p>

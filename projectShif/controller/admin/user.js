@@ -34,16 +34,18 @@ const userblock = async(req,res)=>{
         
         const userId = req.params.id;
 
-       
+        
         const updatedUser = await User.findByIdAndUpdate(userId, { isBlocked: block }, { new: true });
-
+        
         if (updatedUser) {
             const status = block ? 'Blocked' : 'Unblocked';
+            console.log('user block cntroller',updatedUser);
             return res.json({ success: true, message: `User ${status} successfully` });
         } else {
             return res.status(404).json({ success: false, message: 'User not found' });
         }
-    } catch (error) {
+    } 
+    catch (error) {
         console.error(error);   
         res.status(500).json({ success: false, message: 'Failed to update user status' });
     }
